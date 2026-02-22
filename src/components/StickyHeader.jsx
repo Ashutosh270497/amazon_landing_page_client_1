@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Phone, Sparkles } from 'lucide-react';
+import { SITE_CONFIG, getTelHref } from '../config/site';
 
 const StickyHeader = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [isScrollingUp, setIsScrollingUp] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
@@ -14,7 +14,6 @@ const StickyHeader = () => {
       // Show header after scrolling past hero section (about 600px)
       if (currentScrollY > 600) {
         setIsVisible(true);
-        setIsScrollingUp(currentScrollY < lastScrollY);
       } else {
         setIsVisible(false);
       }
@@ -24,7 +23,7 @@ const StickyHeader = () => {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+  }, []);
 
   const scrollToContact = () => {
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
@@ -69,14 +68,14 @@ const StickyHeader = () => {
 
                 {/* Phone CTA */}
                 <motion.a
-                  href="tel:+1234567890"
+                  href={getTelHref()}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.3 }}
                   className="hidden lg:flex items-center gap-2 text-white hover:text-primary-400 transition-colors"
                 >
                   <Phone className="w-4 h-4" />
-                  <span className="text-sm font-medium">+1 (234) 567-890</span>
+                  <span className="text-sm font-medium">{SITE_CONFIG.contact.phoneDisplay}</span>
                 </motion.a>
 
                 {/* CTA Button */}

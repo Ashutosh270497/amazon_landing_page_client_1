@@ -82,47 +82,70 @@ const Stats = () => {
               whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.15, type: "spring" }}
-              whileHover={{ y: -8, scale: 1.03 }}
+              whileHover={{ 
+                y: -10, 
+                scale: 1.05,
+                transition: { type: 'spring', stiffness: 400, damping: 10 }
+              }}
               className="relative group perspective-1000"
             >
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-10 hover:border-primary-500/50 transition-all duration-300 h-full transform-gpu">
-                {/* Gradient overlay on hover */}
+              <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-10 hover:border-primary-400/70 hover:bg-white/15 transition-all duration-500 h-full transform-gpu shadow-xl hover:shadow-2xl hover:shadow-primary-400/20 relative overflow-hidden">
+                {/* Enhanced gradient overlay on hover */}
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-br from-primary-500/10 to-transparent rounded-2xl"
+                  className="absolute inset-0 bg-gradient-to-br from-primary-400/20 via-primary-500/10 to-transparent rounded-2xl"
                   initial={{ opacity: 0 }}
                   whileHover={{ opacity: 1 }}
                   transition={{ duration: 0.3 }}
                 />
 
-                {/* Shine effect */}
+                {/* Enhanced shine effect */}
                 <div className="absolute inset-0 rounded-2xl overflow-hidden">
                   <motion.div
-                    className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/5 to-transparent"
-                    animate={{ translateX: ["−100%", "100%"] }}
-                    transition={{ duration: 3, repeat: Infinity, repeatDelay: 2 }}
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                    initial={{ x: '-100%' }}
+                    animate={{ x: ['−100%', '200%'] }}
+                    transition={{ duration: 3, repeat: Infinity, repeatDelay: 2, ease: 'easeInOut' }}
                   />
                 </div>
 
-                <div className="relative">
+                {/* Glow effect on hover */}
+                <motion.div
+                  className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                  style={{
+                    boxShadow: '0 0 30px rgba(251, 191, 36, 0.3) inset'
+                  }}
+                />
+
+                <div className="relative z-10">
                   <div className="flex justify-center mb-6">
                     <motion.div
-                      className="bg-gradient-to-br from-primary-500 to-primary-600 text-white p-5 rounded-xl shadow-lg shadow-primary-500/25 group-hover:shadow-primary-500/40 transition-shadow duration-300"
-                      whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
-                      transition={{ duration: 0.5 }}
+                      className="bg-gradient-to-br from-primary-400 to-primary-600 text-white p-5 rounded-xl shadow-2xl shadow-primary-500/40 group-hover:shadow-primary-400/60 transition-all duration-500"
+                      whileHover={{ 
+                        rotate: [0, -10, 10, -10, 0], 
+                        scale: 1.15,
+                        boxShadow: '0 20px 40px rgba(251, 191, 36, 0.5)'
+                      }}
+                      transition={{ duration: 0.6, type: 'spring', stiffness: 300 }}
                     >
                       {stat.icon}
                     </motion.div>
                   </div>
-                  <h3 className="text-5xl md:text-6xl font-extrabold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-300 text-center">
-                    <AnimatedCounter
-                      end={stat.value}
-                      prefix={stat.prefix || ''}
-                      suffix={stat.suffix || ''}
-                      duration={2.5}
-                    />
-                  </h3>
-                  <p className="text-white text-xl font-bold text-center">{stat.label}</p>
-                  <p className="text-gray-400 text-base text-center mt-2">{stat.description}</p>
+                  <motion.h3 
+                    className="text-5xl md:text-6xl font-extrabold mb-3 text-center"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+                  >
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-300 via-primary-400 to-primary-300 bg-[length:200%_auto] animate-gradient">
+                      <AnimatedCounter
+                        end={stat.value}
+                        prefix={stat.prefix || ''}
+                        suffix={stat.suffix || ''}
+                        duration={2.5}
+                      />
+                    </span>
+                  </motion.h3>
+                  <p className="text-white text-xl font-bold text-center group-hover:text-primary-300 transition-colors duration-300">{stat.label}</p>
+                  <p className="text-gray-400 text-base text-center mt-2 group-hover:text-gray-300 transition-colors duration-300">{stat.description}</p>
                 </div>
               </div>
             </motion.div>

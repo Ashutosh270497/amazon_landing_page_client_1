@@ -1,24 +1,33 @@
 import { motion } from 'framer-motion';
+import dartlerLogo from '../../assets/amazon_pics/br_1.jpeg';
+import geocarterLogo from '../../assets/amazon_pics/br_2.jpeg';
+import auraveLogo from '../../assets/amazon_pics/br_3.jpeg';
+import pollieLogo from '../../assets/amazon_pics/br_4.jpeg';
+import evairLogo from '../../assets/amazon_pics/br_5.jpeg';
+import moonAndMeiLogo from '../../assets/amazon_pics/br_6.jpeg';
+import upsilonLogo from '../../assets/amazon_pics/br_7.jpeg';
+import kadamLogo from '../../assets/amazon_pics/br_8.jpeg';
+import lickiciousLogo from '../../assets/amazon_pics/br_9.jpeg';
+import giocareLogo from '../../assets/amazon_pics/br_10.jpeg';
 
 const ClientLogosMarquee = () => {
-  // Simulated brand logos with placeholder styling
+  // Actual client brands
   const brands = [
-    { name: 'TechGear', color: 'from-primary-400 to-amber-500' },
-    { name: 'HomeStyle', color: 'from-yellow-400 to-orange-500' },
-    { name: 'FitLife', color: 'from-amber-400 to-primary-600' },
-    { name: 'PetPals', color: 'from-yellow-400 to-amber-500' },
-    { name: 'BeautyBox', color: 'from-orange-400 to-amber-600' },
-    { name: 'KidZone', color: 'from-yellow-300 to-primary-500' },
-    { name: 'OutdoorPro', color: 'from-amber-500 to-orange-600' },
-    { name: 'GourmetCo', color: 'from-orange-400 to-amber-500' },
-    { name: 'AutoParts', color: 'from-primary-500 to-yellow-600' },
-    { name: 'SmartHome', color: 'from-yellow-400 to-amber-400' },
-    { name: 'EcoGoods', color: 'from-amber-400 to-orange-500' },
-    { name: 'LuxWatch', color: 'from-yellow-300 to-amber-400' },
+    { name: 'Dartler', logo: dartlerLogo },
+    { name: 'Geocarter', logo: geocarterLogo },
+    { name: 'Aurave', logo: auraveLogo },
+    { name: 'Pollie by Kadam', logo: pollieLogo },
+    { name: 'Evair', logo: evairLogo },
+    { name: 'Moon & Mei', logo: moonAndMeiLogo },
+    { name: 'Upsilon', logo: upsilonLogo },
+    { name: 'Kadam', logo: kadamLogo },
+    { name: 'Lickicious', logo: lickiciousLogo },
+    { name: 'Giocare', logo: giocareLogo },
   ];
 
   // Double the brands for seamless infinite scroll
   const duplicatedBrands = [...brands, ...brands];
+  const reversedDuplicatedBrands = [...duplicatedBrands].reverse();
 
   return (
     <section className="py-12 bg-amazon-dark relative overflow-hidden">
@@ -52,13 +61,13 @@ const ClientLogosMarquee = () => {
           {duplicatedBrands.map((brand, index) => (
             <div
               key={`row1-${index}`}
-              className="flex-shrink-0 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl px-8 py-4 hover:border-primary-500/50 transition-all duration-300 group"
+              className="flex-shrink-0 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl px-6 py-4 hover:border-primary-500/50 transition-all duration-300 group"
             >
-              <div className="flex items-center gap-3">
-                <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${brand.color} flex items-center justify-center text-white font-bold text-lg`}>
-                  {brand.name.charAt(0)}
+              <div className="flex items-center gap-4">
+                <div className="w-28 h-12 flex items-center justify-center bg-white rounded-lg p-2">
+                  <img src={brand.logo} alt={`${brand.name} logo`} className="max-h-full w-auto object-contain" loading="lazy" />
                 </div>
-                <span className="text-gray-300 font-semibold text-lg group-hover:text-white transition-colors">
+                <span className="text-gray-300 font-semibold text-base group-hover:text-white transition-colors whitespace-nowrap">
                   {brand.name}
                 </span>
               </div>
@@ -78,16 +87,16 @@ const ClientLogosMarquee = () => {
             ease: 'linear',
           }}
         >
-          {duplicatedBrands.reverse().map((brand, index) => (
+          {reversedDuplicatedBrands.map((brand, index) => (
             <div
               key={`row2-${index}`}
-              className="flex-shrink-0 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl px-8 py-4 hover:border-primary-500/50 transition-all duration-300 group"
+              className="flex-shrink-0 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl px-6 py-4 hover:border-primary-500/50 transition-all duration-300 group"
             >
-              <div className="flex items-center gap-3">
-                <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${brand.color} flex items-center justify-center text-white font-bold text-lg`}>
-                  {brand.name.charAt(0)}
+              <div className="flex items-center gap-4">
+                <div className="w-28 h-12 flex items-center justify-center bg-white rounded-lg p-2">
+                  <img src={brand.logo} alt={`${brand.name} logo`} className="max-h-full w-auto object-contain" loading="lazy" />
                 </div>
-                <span className="text-gray-300 font-semibold text-lg group-hover:text-white transition-colors">
+                <span className="text-gray-300 font-semibold text-base group-hover:text-white transition-colors whitespace-nowrap">
                   {brand.name}
                 </span>
               </div>

@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Award, TrendingUp, Target, CheckCircle } from 'lucide-react';
+import expertPhoto from '../../assets/amazon_pics/br_12.jpeg';
 
 const MeetTheExpert = () => {
   const achievements = [
@@ -68,7 +69,7 @@ const MeetTheExpert = () => {
                 {/* Expert image */}
                 <div className="relative aspect-[3/4]">
                   <img
-                    src="/expert-photo.jpg"
+                    src={expertPhoto}
                     alt="Gautam Soni - Award Winning Amazon Strategist"
                     className="w-full h-full object-cover object-center"
                     onError={(e) => {
@@ -160,7 +161,7 @@ const MeetTheExpert = () => {
                 onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
-                className="bg-primary-400 hover:bg-primary-500 text-white px-10 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg shadow-primary-400/30 hover:shadow-primary-500/40 inline-flex items-center gap-2"
+                className="w-full sm:w-auto bg-primary-400 hover:bg-primary-500 text-white px-6 sm:px-10 py-4 rounded-xl font-bold text-base sm:text-lg transition-all duration-300 shadow-lg shadow-primary-400/30 hover:shadow-primary-500/40 inline-flex items-center justify-center gap-2"
               >
                 Schedule a Consultation
                 <Award className="w-5 h-5" />

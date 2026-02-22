@@ -1,5 +1,6 @@
 import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin, ArrowUp } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { SITE_CONFIG, getMailtoHref, getTelHref } from '../config/site';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -29,12 +30,12 @@ const Footer = () => {
     'Brand Registry',
   ];
 
-  const socialLinks = [
-    { icon: <Facebook size={24} />, url: '#', name: 'Facebook' },
-    { icon: <Twitter size={24} />, url: '#', name: 'Twitter' },
-    { icon: <Linkedin size={24} />, url: '#', name: 'LinkedIn' },
-    { icon: <Instagram size={24} />, url: '#', name: 'Instagram' },
-  ];
+  const socialIconMap = {
+    Facebook,
+    Twitter,
+    LinkedIn: Linkedin,
+    Instagram,
+  };
 
   return (
     <footer className="bg-gradient-to-b from-amazon-dark to-gray-950 text-gray-300 relative">
@@ -46,25 +47,30 @@ const Footer = () => {
           {/* Company Info */}
           <div className="lg:col-span-1">
             <h2 className="text-4xl font-bold text-white mb-6">
-              Scale<span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-300">Amazon</span>
+              {SITE_CONFIG.brandName}
             </h2>
             <p className="text-gray-400 mb-8 text-lg leading-relaxed">
               Your trusted partner in Amazon growth. We help sellers scale their business through expert account management, PPC optimization, and strategic guidance.
             </p>
             <div className="flex gap-4">
-              {socialLinks.map((social) => (
-                <motion.a
-                  key={social.name}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.1, y: -2 }}
-                  className="bg-white/5 hover:bg-gradient-to-br hover:from-primary-500 hover:to-primary-600 p-4 rounded-xl transition-all duration-300 border border-white/10 hover:border-primary-500/50 hover:shadow-lg hover:shadow-primary-500/20"
-                  aria-label={social.name}
-                >
-                  {social.icon}
-                </motion.a>
-              ))}
+              {SITE_CONFIG.socialLinks.map((social) => {
+                const Icon = socialIconMap[social.name];
+                if (!Icon) return null;
+
+                return (
+                  <motion.a
+                    key={social.name}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.1, y: -2 }}
+                    className="bg-white/5 hover:bg-gradient-to-br hover:from-primary-500 hover:to-primary-600 p-4 rounded-xl transition-all duration-300 border border-white/10 hover:border-primary-500/50 hover:shadow-lg hover:shadow-primary-500/20"
+                    aria-label={social.name}
+                  >
+                    <Icon size={24} />
+                  </motion.a>
+                );
+              })}
             </div>
           </div>
 
@@ -100,6 +106,16 @@ const Footer = () => {
                   <span className="text-gray-400 text-lg">{service}</span>
                 </li>
               ))}
+              <li>
+                <a
+                  href={SITE_CONFIG.spnLinks.accountManagement}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary-400 hover:text-primary-300 transition-colors text-lg font-semibold"
+                >
+                  Explore Our SPN Page
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -114,23 +130,31 @@ const Footer = () => {
                 <div className="bg-white/5 p-3.5 rounded-xl group-hover:bg-primary-500/20 transition-colors duration-300">
                   <Mail size={22} className="text-primary-400" />
                 </div>
-                <a href="mailto:contact@scaleamazon.com" className="text-gray-400 hover:text-white transition-colors text-lg">
-                  contact@scaleamazon.com
+                <a href={getMailtoHref()} className="text-gray-400 hover:text-white transition-colors text-lg">
+                  {SITE_CONFIG.contact.email}
                 </a>
               </div>
               <div className="flex items-center gap-4 group">
                 <div className="bg-white/5 p-3.5 rounded-xl group-hover:bg-primary-500/20 transition-colors duration-300">
                   <Phone size={22} className="text-primary-400" />
                 </div>
-                <a href="tel:+1234567890" className="text-gray-400 hover:text-white transition-colors text-lg">
-                  +1 (234) 567-890
-                </a>
+                <div className="flex flex-col">
+                  <a href={getTelHref()} className="text-gray-400 hover:text-white transition-colors text-lg">
+                    {SITE_CONFIG.contact.phoneDisplay}
+                  </a>
+                  <a
+                    href={getTelHref(SITE_CONFIG.contact.secondaryPhoneE164)}
+                    className="text-gray-400 hover:text-white transition-colors text-lg"
+                  >
+                    {SITE_CONFIG.contact.secondaryPhoneDisplay}
+                  </a>
+                </div>
               </div>
               <div className="flex items-start gap-4 group">
                 <div className="bg-white/5 p-3.5 rounded-xl group-hover:bg-primary-500/20 transition-colors duration-300">
                   <MapPin size={22} className="text-primary-400" />
                 </div>
-                <span className="text-gray-400 text-lg leading-relaxed">123 Business Street, Suite 100, City, State 12345</span>
+                <span className="text-gray-400 text-lg leading-relaxed">{SITE_CONFIG.contact.address}</span>
               </div>
             </div>
           </div>
@@ -140,16 +164,16 @@ const Footer = () => {
         <div className="border-t border-white/10 pt-10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <p className="text-lg text-gray-500">
-              &copy; {currentYear} ScaleAmazon. All rights reserved.
+              &copy; {currentYear} {SITE_CONFIG.brandName}. All rights reserved.
             </p>
             <div className="flex flex-wrap justify-center gap-8 text-lg">
-              <a href="#" className="text-gray-500 hover:text-primary-400 transition-colors">
+              <a href={SITE_CONFIG.legalLinks.privacy} className="text-gray-500 hover:text-primary-400 transition-colors">
                 Privacy Policy
               </a>
-              <a href="#" className="text-gray-500 hover:text-primary-400 transition-colors">
+              <a href={SITE_CONFIG.legalLinks.terms} className="text-gray-500 hover:text-primary-400 transition-colors">
                 Terms of Service
               </a>
-              <a href="#" className="text-gray-500 hover:text-primary-400 transition-colors">
+              <a href={SITE_CONFIG.legalLinks.cookie} className="text-gray-500 hover:text-primary-400 transition-colors">
                 Cookie Policy
               </a>
             </div>

@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Target, BarChart3, FileText, Search, Building2, MessageSquare, CheckCircle, ArrowRight } from 'lucide-react';
+import { SITE_CONFIG } from '../config/site';
 
 const Services = () => {
   const services = [
@@ -10,6 +11,7 @@ const Services = () => {
       description: 'Get an expert review of your Amazon Pay-Per-Click campaigns to uncover wasted spend, enhance targeting, and unlock higher revenue through actionable optimizations.',
       features: ['Campaign audit & optimization', 'Bid management & targeting', 'ROI-focused strategies'],
       color: 'from-primary-400 to-amber-500',
+      spnUrl: SITE_CONFIG.spnLinks.advertising,
     },
     {
       number: '02',
@@ -18,6 +20,7 @@ const Services = () => {
       description: 'Receive a detailed analysis of your Amazon performance marketing, focusing on strategy, campaign structure, and data-driven improvements to boost growth and visibility.',
       features: ['Performance analysis', 'Campaign structure optimization', 'Data-driven insights'],
       color: 'from-yellow-400 to-orange-500',
+      spnUrl: SITE_CONFIG.spnLinks.advertising,
     },
     {
       number: '03',
@@ -26,6 +29,7 @@ const Services = () => {
       description: 'Access a comprehensive check of your Amazon Brand Story and Enhanced Brand Content, optimizing creative elements for better engagement and increased conversion rates.',
       features: ['Brand Story optimization', 'Enhanced Brand Content', 'Creative element enhancement'],
       color: 'from-amber-400 to-primary-600',
+      spnUrl: SITE_CONFIG.spnLinks.enhancedBrandContent,
     },
     {
       number: '04',
@@ -34,6 +38,7 @@ const Services = () => {
       description: 'Benefit from a full audit of your product listings and keywords to maximize organic traffic, improve search rankings, and increase your Amazon marketplace sales.',
       features: ['Product listing audit', 'Keyword optimization', 'Search ranking improvement'],
       color: 'from-orange-400 to-amber-600',
+      spnUrl: SITE_CONFIG.spnLinks.cataloging,
     },
     {
       number: '05',
@@ -42,6 +47,7 @@ const Services = () => {
       description: 'Gain personalized guidance on setting up and scaling your Amazon business, including verified partner support and compliance for profitable expansion into global markets.',
       features: ['Business setup & scaling', 'Verified partner support', 'Global market expansion'],
       color: 'from-primary-500 to-yellow-500',
+      spnUrl: SITE_CONFIG.spnLinks.accountManagement,
     },
     {
       number: '06',
@@ -104,24 +110,44 @@ const Services = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              whileHover={{ y: -5 }}
+              whileHover={{ 
+                y: -8,
+                transition: { type: 'spring', stiffness: 400, damping: 10 }
+              }}
               className="group relative"
             >
-              <div className="bg-amazon-cream hover:bg-white rounded-3xl p-10 shadow-lg hover:shadow-2xl transition-all duration-500 border border-primary-100 hover:border-primary-300 h-full overflow-hidden">
+              <div className="bg-gradient-to-br from-white to-primary-50/30 hover:from-white hover:to-primary-50/50 rounded-3xl p-10 shadow-xl hover:shadow-2xl hover:shadow-primary-400/20 transition-all duration-500 border border-primary-200/50 hover:border-primary-400/70 h-full overflow-hidden relative">
+                {/* Shimmer effect on hover */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none"></div>
+                
+                {/* Gradient overlay on hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-primary-400/0 to-transparent opacity-0 group-hover:opacity-5 transition-opacity duration-500 pointer-events-none"></div>
+                
                 {/* Large Number Background */}
                 <div className="absolute -top-4 -right-4 text-[140px] font-black text-primary-100 group-hover:text-primary-200 transition-colors duration-500 select-none leading-none">
                   {service.number}
                 </div>
 
-                <div className="relative">
+                <div className="relative z-10">
                   {/* Header with Icon and Number */}
                   <div className="flex items-start justify-between mb-8">
-                    <div className={`bg-gradient-to-br ${service.color} text-white w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                    <motion.div 
+                      className={`bg-gradient-to-br ${service.color} text-white w-16 h-16 rounded-2xl flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-300`}
+                      whileHover={{ 
+                        scale: 1.1, 
+                        rotate: 5,
+                        boxShadow: '0 20px 40px rgba(251, 191, 36, 0.3)'
+                      }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+                    >
                       {service.icon}
-                    </div>
-                    <span className="text-6xl font-black text-primary-400 group-hover:text-primary-500 transition-colors duration-300">
+                    </motion.div>
+                    <motion.span 
+                      className="text-6xl font-black text-primary-400 group-hover:text-primary-500 transition-colors duration-300"
+                      whileHover={{ scale: 1.05 }}
+                    >
                       {service.number}
-                    </span>
+                    </motion.span>
                   </div>
 
                   <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 group-hover:text-primary-700 transition-colors duration-300">
@@ -133,22 +159,80 @@ const Services = () => {
 
                   <ul className="space-y-4 mb-8">
                     {service.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-center text-base text-gray-700">
-                        <CheckCircle className="w-6 h-6 text-primary-500 mr-4 flex-shrink-0" />
+                      <motion.li 
+                        key={idx} 
+                        className="flex items-center text-base text-gray-700"
+                        initial={{ opacity: 0, x: -10 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3, delay: idx * 0.1 }}
+                      >
+                        <motion.div
+                          whileHover={{ scale: 1.2, rotate: 360 }}
+                          transition={{ duration: 0.5 }}
+                        >
+                          <CheckCircle className="w-6 h-6 text-primary-500 mr-4 flex-shrink-0" />
+                        </motion.div>
                         <span className="font-medium">{feature}</span>
-                      </li>
+                      </motion.li>
                     ))}
                   </ul>
 
-                  <button className="flex items-center gap-2 text-primary-600 font-bold text-lg group-hover:text-primary-700 transition-colors duration-300">
-                    Learn More
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-                  </button>
+                  {service.spnUrl ? (
+                    <motion.a
+                      href={service.spnUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-primary-600 font-bold text-lg group-hover:text-primary-700 transition-colors duration-300"
+                      whileHover={{ x: 5 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+                    >
+                      Explore on SPN
+                      <motion.span
+                        whileHover={{ x: 5 }}
+                        transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+                      >
+                        <ArrowRight className="w-5 h-5" />
+                      </motion.span>
+                    </motion.a>
+                  ) : (
+                    <motion.button
+                      onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                      className="flex items-center gap-2 text-primary-600 font-bold text-lg group-hover:text-primary-700 transition-colors duration-300"
+                      whileHover={{ x: 5 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+                    >
+                      Learn More
+                      <motion.span
+                        whileHover={{ x: 5 }}
+                        transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+                      >
+                        <ArrowRight className="w-5 h-5" />
+                      </motion.span>
+                    </motion.button>
+                  )}
                 </div>
               </div>
             </motion.div>
           ))}
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="mt-10 text-center"
+        >
+          <a
+            href={SITE_CONFIG.spnLinks.accountManagement}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary-600 font-bold hover:text-primary-700 transition-colors inline-flex items-center gap-2"
+          >
+            Explore Our SPN Page
+            <ArrowRight className="w-4 h-4" />
+          </a>
+        </motion.div>
 
         {/* CTA Section */}
         <motion.div
@@ -160,11 +244,26 @@ const Services = () => {
         >
           <motion.button
             onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.98 }}
-            className="bg-primary-400 hover:bg-primary-500 text-white px-10 py-4 rounded-xl font-bold text-lg transition-all duration-300 shadow-lg shadow-primary-400/30 hover:shadow-primary-500/40"
+            whileHover={{ 
+              scale: 1.05,
+              boxShadow: '0 0 30px rgba(251, 191, 36, 0.6), 0 0 60px rgba(251, 191, 36, 0.3)',
+              y: -2
+            }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+            className="w-full sm:w-auto bg-gradient-to-r from-primary-400 to-primary-500 hover:from-primary-500 hover:to-primary-600 text-white px-6 sm:px-12 py-4 sm:py-5 rounded-xl font-bold text-base sm:text-lg shadow-xl shadow-primary-400/40 hover:shadow-2xl hover:shadow-primary-500/50 relative overflow-hidden group"
           >
-            Book Your Free Consultation
+            {/* Shine effect */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+              initial={{ x: '-100%' }}
+              animate={{ x: ['100%', '100%', '-100%'] }}
+              transition={{ duration: 3, repeat: Infinity, repeatDelay: 2 }}
+            />
+            <span className="relative z-10 flex items-center gap-2">
+              Book Your Free Consultation
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+            </span>
           </motion.button>
         </motion.div>
       </div>

@@ -115,14 +115,14 @@ const WhyChooseUs = () => {
               <h3 className="text-4xl md:text-5xl font-extrabold mb-6 text-white">
                 Join The <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-primary-300">Profit Revolution</span>
               </h3>
-              <p className="text-gray-300 mb-10 max-w-3xl mx-auto text-xl">
+              <p className="text-gray-300 mb-10 max-w-3xl mx-auto text-base sm:text-lg md:text-xl">
                 Join hundreds of successful sellers who trust us to manage their Amazon operations. Let's discuss how we can help you achieve your goals.
               </p>
               <motion.button
                 onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
-                className="bg-gradient-to-r from-primary-500 to-primary-600 text-white px-10 py-4 rounded-full font-bold text-lg hover:from-primary-600 hover:to-primary-700 transition-all duration-300 shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 inline-flex items-center gap-2 group"
+                className="w-full sm:w-auto bg-gradient-to-r from-primary-500 to-primary-600 text-white px-6 sm:px-10 py-4 rounded-full font-bold text-base sm:text-lg hover:from-primary-600 hover:to-primary-700 transition-all duration-300 shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 inline-flex items-center justify-center gap-2 group"
               >
                 Book Now
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />

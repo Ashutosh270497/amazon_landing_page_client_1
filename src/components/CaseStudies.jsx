@@ -98,9 +98,11 @@ const CaseStudies = () => {
   };
 
   useEffect(() => {
-    const timer = setInterval(nextSlide, 6000);
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % caseStudies.length);
+    }, 6000);
     return () => clearInterval(timer);
-  }, []);
+  }, [caseStudies.length]);
 
   const currentCase = caseStudies[currentIndex];
 

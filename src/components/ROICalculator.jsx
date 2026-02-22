@@ -1,21 +1,50 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Calculator, TrendingUp, DollarSign, Target, ArrowRight } from 'lucide-react';
+import { getWhatsAppUrl } from '../config/site';
 
 const ROICalculator = () => {
   const [currentRevenue, setCurrentRevenue] = useState(50000);
   const [adSpend, setAdSpend] = useState(5000);
+  const [selectedPeriod, setSelectedPeriod] = useState('1-year');
   const [isCalculated, setIsCalculated] = useState(false);
 
-  // Calculate projected improvements
-  const projectedRevenue = Math.round(currentRevenue * 2.4); // 140% increase
-  const projectedAdSpend = Math.round(adSpend * 0.7); // 30% reduction
-  const projectedROI = Math.round(((projectedRevenue - currentRevenue) / adSpend) * 100);
-  const annualSavings = (adSpend - projectedAdSpend) * 12;
-  const annualRevenueGain = (projectedRevenue - currentRevenue) * 12;
+  const periodOptions = [
+    { key: '1-year', label: '1 Year', revenueMultiplier: 3 },
+    { key: '2-year', label: '2 Year', revenueMultiplier: 4 },
+    { key: '3-year', label: '3 Year', revenueMultiplier: 6 },
+    { key: 'custom', label: 'Custom' },
+  ];
+
+  const activePeriod = periodOptions.find((option) => option.key === selectedPeriod) || periodOptions[0];
+  const revenueMultiplier = activePeriod.revenueMultiplier || 3;
+
+  // Growth logic from provided rules:
+  // 1 Year -> current revenue + (ad spend * 3)
+  // 2 Year -> current revenue + (ad spend * 4)
+  // 3 Year -> current revenue + (ad spend * 6)
+  // Ad spend remains as current ad spend.
+  const totalCurrentRevenue = currentRevenue;
+  const totalProjectedRevenue = currentRevenue + (adSpend * revenueMultiplier);
+  const totalCurrentAdSpend = adSpend;
+  const totalProjectedAdSpend = adSpend;
+  const totalRevenueGain = totalProjectedRevenue - totalCurrentRevenue;
+  const projectedROI = Math.round((totalRevenueGain / (totalCurrentAdSpend || 1)) * 100);
+  const periodLabel = activePeriod.label;
 
   const handleCalculate = () => {
     setIsCalculated(true);
+  };
+
+  const handleTimePeriodSelect = (optionKey) => {
+    if (optionKey === 'custom') {
+      const message = `Hi, I need a custom ROI projection. My current monthly revenue is ${formatCurrency(currentRevenue)} and monthly ad spend is ${formatCurrency(adSpend)}.`;
+      window.open(getWhatsAppUrl(message), '_blank', 'noopener,noreferrer');
+      return;
+    }
+
+    setSelectedPeriod(optionKey);
+    setIsCalculated(false);
   };
 
   const scrollToContact = () => {
@@ -141,6 +170,33 @@ const ROICalculator = () => {
                 </div>
               </div>
 
+              {/* Time Period Selector */}
+              <div>
+                <div className="flex justify-between items-center mb-3">
+                  <label className="text-gray-300 font-medium flex items-center gap-2">
+                    <Calculator className="w-5 h-5 text-primary-400" />
+                    Time Period
+                  </label>
+                  <span className="text-xl font-bold text-primary-400">{periodLabel}</span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {periodOptions.map((option) => (
+                    <button
+                      key={option.key}
+                      type="button"
+                      onClick={() => handleTimePeriodSelect(option.key)}
+                      className={`px-4 py-3 rounded-lg border transition-colors duration-200 font-semibold ${
+                        selectedPeriod === option.key
+                          ? 'bg-primary-500/20 border-primary-400 text-primary-400'
+                          : 'bg-white/5 border-white/10 text-gray-300 hover:border-primary-400/60'
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <motion.button
                 onClick={handleCalculate}
                 whileHover={{ scale: 1.02 }}
@@ -173,13 +229,13 @@ const ROICalculator = () => {
                     <div className="bg-green-500/20 p-2 rounded-lg">
                       <TrendingUp className="w-6 h-6 text-green-400" />
                     </div>
-                    <h4 className="text-lg font-semibold text-white">Projected Monthly Revenue</h4>
+                    <h4 className="text-lg font-semibold text-white">{periodLabel} Projected Revenue</h4>
                   </div>
                   <div className="flex items-baseline gap-3">
-                    <span className="text-4xl md:text-5xl font-black text-green-400">{formatCurrency(projectedRevenue)}</span>
-                    <span className="text-green-400 font-bold">+140%</span>
+                    <span className="text-4xl md:text-5xl font-black text-green-400">{formatCurrency(totalProjectedRevenue)}</span>
+                    <span className="text-green-400 font-bold">+ Ad Spend x{revenueMultiplier}</span>
                   </div>
-                  <p className="text-gray-400 mt-2">Up from {formatCurrency(currentRevenue)}</p>
+                  <p className="text-gray-400 mt-2">Up from {formatCurrency(totalCurrentRevenue)}</p>
                 </motion.div>
 
                 {/* Ad Spend Savings Card */}
@@ -193,27 +249,27 @@ const ROICalculator = () => {
                     <div className="bg-primary-500/20 p-2 rounded-lg">
                       <DollarSign className="w-6 h-6 text-primary-400" />
                     </div>
-                    <h4 className="text-lg font-semibold text-white">Optimized Ad Spend</h4>
+                    <h4 className="text-lg font-semibold text-white">{periodLabel} Projected Ad Spend</h4>
                   </div>
                   <div className="flex items-baseline gap-3">
-                    <span className="text-4xl md:text-5xl font-black text-primary-400">{formatCurrency(projectedAdSpend)}</span>
-                    <span className="text-primary-400 font-bold">-30%</span>
+                    <span className="text-4xl md:text-5xl font-black text-primary-400">{formatCurrency(totalProjectedAdSpend)}</span>
+                    <span className="text-primary-400 font-bold">No Change</span>
                   </div>
-                  <p className="text-gray-400 mt-2">Save {formatCurrency(annualSavings)}/year</p>
+                  <p className="text-gray-400 mt-2">Maintained from current spend {formatCurrency(totalCurrentAdSpend)}</p>
                 </motion.div>
 
-                {/* Annual Gain Summary */}
+                {/* Period Gain Summary */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
                   className="bg-white/5 rounded-2xl p-6 border border-white/10"
                 >
-                  <h4 className="text-lg font-semibold text-white mb-4">Annual Impact</h4>
+                  <h4 className="text-lg font-semibold text-white mb-4">{periodLabel} Impact</h4>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <p className="text-gray-400 text-sm">Revenue Gain</p>
-                      <p className="text-2xl font-bold text-green-400">{formatCurrency(annualRevenueGain)}</p>
+                      <p className="text-2xl font-bold text-green-400">{formatCurrency(totalRevenueGain)}</p>
                     </div>
                     <div>
                       <p className="text-gray-400 text-sm">Projected ROI</p>

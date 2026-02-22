@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle, X } from 'lucide-react';
+import { SITE_CONFIG } from '../config/site';
 
 const SocialProofPopup = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -96,7 +97,7 @@ const SocialProofPopup = () => {
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: -400, opacity: 0 }}
           transition={{ type: "spring", damping: 25, stiffness: 200 }}
-          className="fixed bottom-24 left-6 z-40 max-w-sm"
+          className="fixed bottom-24 left-3 right-3 sm:left-6 sm:right-auto z-40 sm:max-w-sm"
         >
           <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-4 relative overflow-hidden">
             {/* Gradient border effect */}
@@ -135,7 +136,7 @@ const SocialProofPopup = () => {
               <div className="w-4 h-4 bg-primary-100 rounded-full flex items-center justify-center">
                 <CheckCircle className="w-3 h-3 text-primary-600" />
               </div>
-              <span className="text-xs text-gray-500">Verified by ScaleAmazon</span>
+              <span className="text-xs text-gray-500">Verified by {SITE_CONFIG.brandName}</span>
             </div>
           </div>
         </motion.div>

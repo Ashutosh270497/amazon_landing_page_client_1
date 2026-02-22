@@ -1,6 +1,32 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { MessageCircle, Send, CheckCircle, Mail, Phone, MapPin } from 'lucide-react';
+import { CONTAINER } from '../constants';
+import {
+  SITE_CONFIG,
+  getLeadMailtoHref,
+  getMailtoHref,
+  getTelHref,
+  getWhatsAppUrl,
+} from '../config/site';
+
+// Revenue options
+const revenueOptions = [
+  { value: '0-10k', label: '$0 - $10,000' },
+  { value: '10k-50k', label: '$10,000 - $50,000' },
+  { value: '50k-100k', label: '$50,000 - $100,000' },
+  { value: '100k-500k', label: '$100,000 - $500,000' },
+  { value: '500k+', label: '$500,000+' },
+];
+
+const revenueLabelMap = revenueOptions.reduce((acc, option) => {
+  acc[option.value] = option.label;
+  return acc;
+}, {});
+
+// Input base styles
+const inputBaseStyles = 'w-full px-4 py-3 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 bg-white/10 text-white placeholder-gray-500';
+const getInputStyles = (hasError) => `${inputBaseStyles} border ${hasError ? 'border-red-400' : 'border-white/20'}`;
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -67,7 +93,24 @@ const ContactForm = () => {
       return;
     }
 
-    console.log('Form submitted:', formData);
+    const emailBody = [
+      'New Contact Form Submission',
+      `Submitted At: ${new Date().toLocaleString()}`,
+      '',
+      `Full Name: ${formData.name}`,
+      `Brand Name: ${formData.brandName}`,
+      `Monthly Revenue: ${revenueLabelMap[formData.monthlyRevenue] || formData.monthlyRevenue}`,
+      `Email: ${formData.email}`,
+      `Phone: ${formData.phone}`,
+      `Message: ${formData.message || 'N/A'}`,
+    ].join('\n');
+
+    const mailtoHref = getLeadMailtoHref({
+      subject: 'New Lead - Contact Form',
+      body: emailBody,
+    });
+
+    window.location.href = mailtoHref;
 
     setShowSuccess(true);
 
@@ -86,9 +129,7 @@ const ContactForm = () => {
   };
 
   const openWhatsApp = () => {
-    const phoneNumber = 'YOUR_NUMBER';
-    const message = encodeURIComponent('Hello, I am interested in your Amazon agency services.');
-    window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+    window.open(getWhatsAppUrl(), '_blank');
   };
 
   return (
@@ -99,7 +140,7 @@ const ContactForm = () => {
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary-400/10 rounded-full blur-3xl"></div>
       </div>
 
-      <div className="relative max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-10">
+      <div className={`relative ${CONTAINER.default}`}>
         <div className="text-center mb-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -167,9 +208,7 @@ const ContactForm = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className={`w-full px-4 py-3 border ${
-                    errors.name ? 'border-red-400' : 'border-white/20'
-                  } rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 bg-white/10 text-white placeholder-gray-500`}
+                  className={getInputStyles(errors.name)}
                   placeholder="John Doe"
                 />
                 {errors.name && <p className="mt-1 text-sm text-red-400">{errors.name}</p>}
@@ -185,9 +224,7 @@ const ContactForm = () => {
                   name="brandName"
                   value={formData.brandName}
                   onChange={handleChange}
-                  className={`w-full px-4 py-3 border ${
-                    errors.brandName ? 'border-red-400' : 'border-white/20'
-                  } rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 bg-white/10 text-white placeholder-gray-500`}
+                  className={getInputStyles(errors.brandName)}
                   placeholder="Your Brand"
                 />
                 {errors.brandName && <p className="mt-1 text-sm text-red-400">{errors.brandName}</p>}
@@ -202,16 +239,14 @@ const ContactForm = () => {
                   name="monthlyRevenue"
                   value={formData.monthlyRevenue}
                   onChange={handleChange}
-                  className={`w-full px-4 py-3 border ${
-                    errors.monthlyRevenue ? 'border-red-400' : 'border-white/20'
-                  } rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 bg-white/10 text-white`}
+                  className={getInputStyles(errors.monthlyRevenue)}
                 >
                   <option value="" className="bg-gray-900">Select revenue range</option>
-                  <option value="0-10k" className="bg-gray-900">$0 - $10,000</option>
-                  <option value="10k-50k" className="bg-gray-900">$10,000 - $50,000</option>
-                  <option value="50k-100k" className="bg-gray-900">$50,000 - $100,000</option>
-                  <option value="100k-500k" className="bg-gray-900">$100,000 - $500,000</option>
-                  <option value="500k+" className="bg-gray-900">$500,000+</option>
+                  {revenueOptions.map((opt) => (
+                    <option key={opt.value} value={opt.value} className="bg-gray-900">
+                      {opt.label}
+                    </option>
+                  ))}
                 </select>
                 {errors.monthlyRevenue && <p className="mt-1 text-sm text-red-400">{errors.monthlyRevenue}</p>}
               </div>
@@ -227,9 +262,7 @@ const ContactForm = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 border ${
-                      errors.email ? 'border-red-400' : 'border-white/20'
-                    } rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 bg-white/10 text-white placeholder-gray-500`}
+                    className={getInputStyles(errors.email)}
                     placeholder="john@example.com"
                   />
                   {errors.email && <p className="mt-1 text-sm text-red-400">{errors.email}</p>}
@@ -245,10 +278,8 @@ const ContactForm = () => {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 border ${
-                      errors.phone ? 'border-red-400' : 'border-white/20'
-                    } rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 bg-white/10 text-white placeholder-gray-500`}
-                    placeholder="+1 (555) 123-4567"
+                    className={getInputStyles(errors.phone)}
+                    placeholder="+91 63871 04378"
                   />
                   {errors.phone && <p className="mt-1 text-sm text-red-400">{errors.phone}</p>}
                 </div>
@@ -297,8 +328,8 @@ const ContactForm = () => {
                 </div>
                 <div>
                   <p className="text-gray-400 text-sm">Email Us</p>
-                  <a href="mailto:contact@scaleamazon.com" className="text-white font-semibold hover:text-primary-400 transition-colors">
-                    contact@scaleamazon.com
+                  <a href={getMailtoHref()} className="text-white font-semibold hover:text-primary-400 transition-colors">
+                    {SITE_CONFIG.contact.email}
                   </a>
                 </div>
               </div>
@@ -308,9 +339,17 @@ const ContactForm = () => {
                 </div>
                 <div>
                   <p className="text-gray-400 text-sm">Call Us</p>
-                  <a href="tel:+1234567890" className="text-white font-semibold hover:text-primary-400 transition-colors">
-                    +1 (234) 567-890
-                  </a>
+                  <div className="flex flex-col">
+                    <a href={getTelHref()} className="text-white font-semibold hover:text-primary-400 transition-colors">
+                      {SITE_CONFIG.contact.phoneDisplay}
+                    </a>
+                    <a
+                      href={getTelHref(SITE_CONFIG.contact.secondaryPhoneE164)}
+                      className="text-white/90 font-semibold hover:text-primary-400 transition-colors"
+                    >
+                      {SITE_CONFIG.contact.secondaryPhoneDisplay}
+                    </a>
+                  </div>
                 </div>
               </div>
               <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 flex items-center gap-4">
@@ -319,7 +358,7 @@ const ContactForm = () => {
                 </div>
                 <div>
                   <p className="text-gray-400 text-sm">Location</p>
-                  <p className="text-white font-semibold">123 Business Street, Suite 100</p>
+                  <p className="text-white font-semibold">{SITE_CONFIG.contact.address}</p>
                 </div>
               </div>
             </div>

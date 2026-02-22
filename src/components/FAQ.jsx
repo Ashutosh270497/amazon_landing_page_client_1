@@ -134,9 +134,9 @@ const FAQ = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.6 }}
-          className="mt-16 text-center bg-gradient-to-br from-primary-50 to-white border border-primary-200 rounded-3xl p-12"
+          className="mt-16 text-center bg-gradient-to-br from-primary-50 to-white border border-primary-200 rounded-3xl p-6 sm:p-8 md:p-12"
         >
-          <h3 className="text-3xl font-extrabold text-gray-900 mb-4">
+          <h3 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-4">
             Still Have Questions?
           </h3>
           <p className="text-gray-600 mb-8 font-medium text-lg">
@@ -148,7 +148,7 @@ const FAQ = () => {
             }
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
-            className="bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white px-10 py-4 rounded-full font-bold text-lg transition-all duration-300 shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50"
+            className="w-full sm:w-auto bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white px-6 sm:px-10 py-4 rounded-full font-bold text-base sm:text-lg transition-all duration-300 shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50"
           >
             Contact Us
           </motion.button>

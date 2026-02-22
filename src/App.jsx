@@ -13,6 +13,8 @@ import CaseStudies from './components/CaseStudies';
 import Testimonials from './components/Testimonials';
 import MeetTheExpert from './components/MeetTheExpert';
 import WhyChooseUs from './components/WhyChooseUs';
+import IsItWorthIt from './components/IsItWorthIt';
+import BookConsultation from './components/BookConsultation';
 import FAQ from './components/FAQ';
 import ContactForm from './components/ContactForm';
 import Footer from './components/Footer';
@@ -22,7 +24,7 @@ import FloatingElements from './components/FloatingElements';
 
 function App() {
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen relative overflow-x-hidden">
       {/* Background floating elements */}
       <FloatingElements />
 
@@ -46,6 +48,8 @@ function App() {
       <Testimonials />
       <MeetTheExpert />
       <WhyChooseUs />
+      <IsItWorthIt />
+      <BookConsultation />
       <FAQ />
       <ContactForm />
       <Footer />
