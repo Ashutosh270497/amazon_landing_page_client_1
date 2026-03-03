@@ -51,6 +51,20 @@ const Services = () => {
     },
     {
       number: '06',
+      icon: <BarChart3 className="w-10 h-10" />,
+      title: 'Performance Management',
+      description: 'Strengthen your Amazon business with continuous performance monitoring, strategic optimization, and structured execution focused on long-term profitability and scalable growth.',
+      features: [
+        'KPI tracking & performance reporting',
+        'Advertising efficiency & budget control',
+        'Conversion & ranking improvement',
+        'Data-backed growth strategy',
+      ],
+      color: 'from-amber-500 to-yellow-500',
+      spnUrl: SITE_CONFIG.spnLinks.accountManagement,
+    },
+    {
+      number: '07',
       icon: <MessageSquare className="w-10 h-10" />,
       title: 'Free Consultation & Growth Planning',
       description: 'Take advantage of a strategy session to clarify business goals, address challenges, and receive a custom growth plan tailored to your Amazon account success.',

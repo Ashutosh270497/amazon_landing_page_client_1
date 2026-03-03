@@ -3,9 +3,61 @@ import { motion } from 'framer-motion';
 import { Calculator, TrendingUp, DollarSign, Target, ArrowRight } from 'lucide-react';
 import { getWhatsAppUrl } from '../config/site';
 
+const currencyOptions = [
+  {
+    key: 'USD',
+    label: 'Dollar',
+    icon: '$',
+    locale: 'en-US',
+    currency: 'USD',
+    rateFromUSD: 1,
+    revenueMin: 10000,
+    revenueMax: 500000,
+    revenueStep: 5000,
+    adSpendMin: 1000,
+    adSpendMax: 100000,
+    adSpendStep: 1000,
+    compactDivisor: 1000,
+    compactSuffix: 'K',
+  },
+  {
+    key: 'INR',
+    label: 'INR',
+    icon: '₹',
+    locale: 'en-IN',
+    currency: 'INR',
+    rateFromUSD: 83,
+    revenueMin: 830000,
+    revenueMax: 41500000,
+    revenueStep: 415000,
+    adSpendMin: 83000,
+    adSpendMax: 8300000,
+    adSpendStep: 83000,
+    compactDivisor: 100000,
+    compactSuffix: 'L',
+  },
+  {
+    key: 'GBP',
+    label: 'Pound',
+    icon: '£',
+    locale: 'en-GB',
+    currency: 'GBP',
+    rateFromUSD: 0.79,
+    revenueMin: 7900,
+    revenueMax: 395000,
+    revenueStep: 3950,
+    adSpendMin: 790,
+    adSpendMax: 79000,
+    adSpendStep: 790,
+    compactDivisor: 1000,
+    compactSuffix: 'K',
+  },
+];
+
 const ROICalculator = () => {
-  const [currentRevenue, setCurrentRevenue] = useState(50000);
-  const [adSpend, setAdSpend] = useState(5000);
+  const [currencyKey, setCurrencyKey] = useState('USD');
+  const [currentRevenueUsd, setCurrentRevenueUsd] = useState(50000);
+  const [adSpendUsd, setAdSpendUsd] = useState(5000);
   const [selectedPeriod, setSelectedPeriod] = useState('1-year');
   const [isCalculated, setIsCalculated] = useState(false);
 
@@ -16,8 +68,11 @@ const ROICalculator = () => {
     { key: 'custom', label: 'Custom' },
   ];
 
+  const activeCurrency = currencyOptions.find((option) => option.key === currencyKey) || currencyOptions[0];
   const activePeriod = periodOptions.find((option) => option.key === selectedPeriod) || periodOptions[0];
   const revenueMultiplier = activePeriod.revenueMultiplier || 3;
+  const currentRevenue = Math.round(currentRevenueUsd * activeCurrency.rateFromUSD);
+  const adSpend = Math.round(adSpendUsd * activeCurrency.rateFromUSD);
 
   // Growth logic from provided rules:
   // 1 Year -> current revenue + (ad spend * 3)
@@ -51,10 +106,23 @@ const ROICalculator = () => {
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const handleCurrencySelect = (nextCurrencyKey) => {
+    setCurrencyKey(nextCurrencyKey);
+    setIsCalculated(false);
+  };
+
+  const formatCompactValue = (value) => {
+    const compactValue = value / activeCurrency.compactDivisor;
+    const formattedValue =
+      compactValue >= 100 ? Math.round(compactValue).toString() : compactValue.toFixed(compactValue % 1 === 0 ? 0 : 1);
+
+    return `${activeCurrency.icon}${formattedValue}${activeCurrency.compactSuffix}`;
+  };
+
   const formatCurrency = (value) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat(activeCurrency.locale, {
       style: 'currency',
-      currency: 'USD',
+      currency: activeCurrency.currency,
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(value);
@@ -110,6 +178,34 @@ const ROICalculator = () => {
             <h3 className="text-2xl font-bold text-white mb-8">Enter Your Current Numbers</h3>
 
             <div className="space-y-8">
+              {/* Currency Selector */}
+              <div>
+                <div className="flex justify-between items-center mb-3">
+                  <label className="text-gray-300 font-medium flex items-center gap-2">
+                    <DollarSign className="w-5 h-5 text-primary-400" />
+                    Currency
+                  </label>
+                  <span className="text-xl font-bold text-primary-400">{activeCurrency.icon} {activeCurrency.label}</span>
+                </div>
+                <div className="grid grid-cols-3 gap-3">
+                  {currencyOptions.map((option) => (
+                    <button
+                      key={option.key}
+                      type="button"
+                      onClick={() => handleCurrencySelect(option.key)}
+                      className={`px-4 py-3 rounded-lg border transition-colors duration-200 font-semibold ${
+                        currencyKey === option.key
+                          ? 'bg-primary-500/20 border-primary-400 text-primary-400'
+                          : 'bg-white/5 border-white/10 text-gray-300 hover:border-primary-400/60'
+                      }`}
+                    >
+                      <span className="mr-2 text-lg">{option.icon}</span>
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               {/* Monthly Revenue Slider */}
               <div>
                 <div className="flex justify-between items-center mb-3">
@@ -121,22 +217,22 @@ const ROICalculator = () => {
                 </div>
                 <input
                   type="range"
-                  min="10000"
-                  max="500000"
-                  step="5000"
+                  min={activeCurrency.revenueMin}
+                  max={activeCurrency.revenueMax}
+                  step={activeCurrency.revenueStep}
                   value={currentRevenue}
                   onChange={(e) => {
-                    setCurrentRevenue(parseInt(e.target.value));
+                    setCurrentRevenueUsd(parseInt(e.target.value, 10) / activeCurrency.rateFromUSD);
                     setIsCalculated(false);
                   }}
                   className="w-full h-3 bg-white/10 rounded-full appearance-none cursor-pointer slider-primary"
                   style={{
-                    background: `linear-gradient(to right, #f59e0b 0%, #f59e0b ${((currentRevenue - 10000) / (500000 - 10000)) * 100}%, rgba(255,255,255,0.1) ${((currentRevenue - 10000) / (500000 - 10000)) * 100}%, rgba(255,255,255,0.1) 100%)`
+                    background: `linear-gradient(to right, #f59e0b 0%, #f59e0b ${((currentRevenue - activeCurrency.revenueMin) / (activeCurrency.revenueMax - activeCurrency.revenueMin)) * 100}%, rgba(255,255,255,0.1) ${((currentRevenue - activeCurrency.revenueMin) / (activeCurrency.revenueMax - activeCurrency.revenueMin)) * 100}%, rgba(255,255,255,0.1) 100%)`
                   }}
                 />
                 <div className="flex justify-between text-sm text-gray-500 mt-2">
-                  <span>$10K</span>
-                  <span>$500K</span>
+                  <span>{formatCompactValue(activeCurrency.revenueMin)}</span>
+                  <span>{formatCompactValue(activeCurrency.revenueMax)}</span>
                 </div>
               </div>
 
@@ -151,22 +247,22 @@ const ROICalculator = () => {
                 </div>
                 <input
                   type="range"
-                  min="1000"
-                  max="100000"
-                  step="1000"
+                  min={activeCurrency.adSpendMin}
+                  max={activeCurrency.adSpendMax}
+                  step={activeCurrency.adSpendStep}
                   value={adSpend}
                   onChange={(e) => {
-                    setAdSpend(parseInt(e.target.value));
+                    setAdSpendUsd(parseInt(e.target.value, 10) / activeCurrency.rateFromUSD);
                     setIsCalculated(false);
                   }}
                   className="w-full h-3 bg-white/10 rounded-full appearance-none cursor-pointer"
                   style={{
-                    background: `linear-gradient(to right, #f59e0b 0%, #f59e0b ${((adSpend - 1000) / (100000 - 1000)) * 100}%, rgba(255,255,255,0.1) ${((adSpend - 1000) / (100000 - 1000)) * 100}%, rgba(255,255,255,0.1) 100%)`
+                    background: `linear-gradient(to right, #f59e0b 0%, #f59e0b ${((adSpend - activeCurrency.adSpendMin) / (activeCurrency.adSpendMax - activeCurrency.adSpendMin)) * 100}%, rgba(255,255,255,0.1) ${((adSpend - activeCurrency.adSpendMin) / (activeCurrency.adSpendMax - activeCurrency.adSpendMin)) * 100}%, rgba(255,255,255,0.1) 100%)`
                   }}
                 />
                 <div className="flex justify-between text-sm text-gray-500 mt-2">
-                  <span>$1K</span>
-                  <span>$100K</span>
+                  <span>{formatCompactValue(activeCurrency.adSpendMin)}</span>
+                  <span>{formatCompactValue(activeCurrency.adSpendMax)}</span>
                 </div>
               </div>
 
