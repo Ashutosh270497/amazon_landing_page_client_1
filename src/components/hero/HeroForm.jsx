@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle, Shield, Clock, Star, ArrowRight } from 'lucide-react';
-import { getLeadMailtoHref } from '../../config/site';
+import { motion } from 'framer-motion';
+import { Shield, Clock, Star, ArrowRight } from 'lucide-react';
+import { submitLeadForm } from '../../config/site';
 
 const trustIndicators = [
   { icon: <Shield className="w-4 h-4" />, text: 'NDA Protected' },
@@ -24,6 +24,8 @@ const serviceLabelMap = serviceOptions.reduce((acc, option) => {
   return acc;
 }, {});
 
+const THANK_YOU_PATH = `${import.meta.env.BASE_URL}thank-you.html`;
+
 const HeroForm = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -33,8 +35,9 @@ const HeroForm = () => {
     serviceType: '',
     message: '',
   });
-  const [showSuccess, setShowSuccess] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -66,36 +69,30 @@ const HeroForm = () => {
       return;
     }
 
-    const emailBody = [
-      'New Hero Audit Form Submission',
-      `Submitted At: ${new Date().toLocaleString()}`,
-      '',
-      `Name: ${formData.name}`,
-      `Email: ${formData.email}`,
-      `Phone: ${formData.phone}`,
-      `Amazon Store/Product Link: ${formData.productLink || 'N/A'}`,
-      `Service Type: ${serviceLabelMap[formData.serviceType] || formData.serviceType}`,
-      `Business Notes: ${formData.message || 'N/A'}`,
-    ].join('\n');
+    setSubmitError('');
+    setIsSubmitting(true);
 
-    const mailtoHref = getLeadMailtoHref({
-      subject: 'New Lead - Hero Free Audit Form',
-      body: emailBody,
-    });
-
-    window.location.href = mailtoHref;
-
-    setShowSuccess(true);
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      productLink: '',
-      serviceType: '',
-      message: '',
-    });
-
-    setTimeout(() => setShowSuccess(false), 5000);
+    try {
+      submitLeadForm({
+        subject: 'New Lead - Hero Free Audit Form',
+        formName: 'Hero Free Audit Form',
+        replyTo: formData.email,
+        nextUrl: THANK_YOU_PATH,
+        fields: {
+          submittedAt: new Date().toLocaleString(),
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          amazonStoreOrProductLink: formData.productLink || 'N/A',
+          serviceType: serviceLabelMap[formData.serviceType] || formData.serviceType,
+          businessNotes: formData.message || 'N/A',
+        },
+      });
+    } catch (error) {
+      setSubmitError('Lead submission failed. Please try again or contact us on WhatsApp.');
+      setIsSubmitting(false);
+      console.error(error);
+    }
   };
 
   const inputBaseClass =
@@ -149,28 +146,12 @@ const HeroForm = () => {
           ))}
         </div>
 
-        <AnimatePresence mode="wait">
-          {showSuccess ? (
-            <motion.div
-              key="success"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              className="bg-white rounded-xl p-6 text-center"
-            >
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: 'spring', delay: 0.2 }}
-                className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"
-              >
-                <CheckCircle className="w-8 h-8 text-green-600" />
-              </motion.div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Thank You!</h3>
-              <p className="text-gray-600">We'll contact you within 24 hours with your free audit.</p>
-            </motion.div>
-          ) : (
-            <motion.form key="form" onSubmit={handleSubmit} className="space-y-4 relative">
+        <motion.form onSubmit={handleSubmit} className="space-y-4 relative">
+          {submitError && (
+            <div className="rounded-xl bg-red-500/15 border border-red-300/40 px-4 py-3 text-sm font-medium text-red-50">
+              {submitError}
+            </div>
+          )}
               {/* Name Input */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
@@ -286,14 +267,15 @@ const HeroForm = () => {
               {/* Submit Button */}
               <motion.button
                 type="submit"
+                disabled={isSubmitting}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
                 whileHover={{ scale: 1.02, boxShadow: '0 20px 40px rgba(0,0,0,0.3)' }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full bg-amazon-dark hover:bg-gray-900 text-white px-8 py-5 rounded-xl font-black text-lg transition-all duration-300 shadow-xl flex items-center justify-center gap-2 group relative overflow-hidden"
+                className="w-full bg-amazon-dark hover:bg-gray-900 disabled:opacity-70 disabled:cursor-not-allowed text-white px-8 py-5 rounded-xl font-black text-lg transition-all duration-300 shadow-xl flex items-center justify-center gap-2 group relative overflow-hidden"
               >
-                <span className="relative z-10">Get Free Audit Now</span>
+                <span className="relative z-10">{isSubmitting ? 'Submitting...' : 'Get Free Audit Now'}</span>
                 <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
                 <motion.div
                   className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent"
@@ -305,9 +287,7 @@ const HeroForm = () => {
               <p className="text-center text-white/60 text-xs mt-4">
                 By submitting, you agree to our Terms & Privacy Policy
               </p>
-            </motion.form>
-          )}
-        </AnimatePresence>
+        </motion.form>
       </div>
 
       {/* Social proof */}

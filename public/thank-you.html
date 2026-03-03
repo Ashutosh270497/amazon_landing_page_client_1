@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thank You | Digital Universe</title>
+    <style>
+      :root {
+        --bg: #0c1224;
+        --panel: rgba(255, 255, 255, 0.06);
+        --panel-border: rgba(255, 255, 255, 0.1);
+        --text: #ffffff;
+        --muted: #c6cedd;
+        --accent: #f5b400;
+        --accent-strong: #e49a00;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Arial, Helvetica, sans-serif;
+        background:
+          radial-gradient(circle at top, rgba(245, 180, 0, 0.18), transparent 30%),
+          radial-gradient(circle at bottom right, rgba(245, 180, 0, 0.12), transparent 25%),
+          var(--bg);
+        color: var(--text);
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+
+      .card {
+        width: min(100%, 760px);
+        background: var(--panel);
+        border: 1px solid var(--panel-border);
+        backdrop-filter: blur(12px);
+        border-radius: 28px;
+        padding: 40px 28px;
+        text-align: center;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+      }
+
+      .icon {
+        width: 84px;
+        height: 84px;
+        margin: 0 auto 24px;
+        border-radius: 999px;
+        background: rgba(245, 180, 0, 0.16);
+        display: grid;
+        place-items: center;
+        color: var(--accent);
+        font-size: 38px;
+      }
+
+      .badge {
+        display: inline-block;
+        margin-bottom: 18px;
+        padding: 10px 16px;
+        border-radius: 999px;
+        border: 1px solid rgba(245, 180, 0, 0.3);
+        background: rgba(245, 180, 0, 0.08);
+        color: #ffd364;
+        font-weight: 700;
+        font-size: 14px;
+      }
+
+      h1 {
+        margin: 0 0 12px;
+        font-size: clamp(36px, 5vw, 56px);
+        line-height: 1.05;
+      }
+
+      p {
+        margin: 0 auto;
+        max-width: 640px;
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.6;
+      }
+
+      .actions {
+        margin-top: 32px;
+        display: grid;
+        gap: 14px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 56px;
+        border-radius: 18px;
+        padding: 0 22px;
+        text-decoration: none;
+        font-weight: 700;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+      }
+
+      .btn-primary {
+        background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+        color: #fff;
+        box-shadow: 0 16px 30px rgba(245, 180, 0, 0.28);
+      }
+
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--panel-border);
+        color: var(--text);
+      }
+
+      .contact-box {
+        margin-top: 28px;
+        padding: 20px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--panel-border);
+      }
+
+      .contact-box strong {
+        display: block;
+        margin-bottom: 10px;
+        color: #ffd364;
+        letter-spacing: 0.12em;
+        font-size: 12px;
+      }
+
+      .contact-box span {
+        display: block;
+        color: var(--muted);
+        line-height: 1.8;
+      }
+
+      @media (min-width: 640px) {
+        .card {
+          padding: 52px 44px;
+        }
+
+        .actions {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <div class="icon">✓</div>
+      <div class="badge">Request Submitted Successfully</div>
+      <h1>Thank You</h1>
+      <p>
+        Your details have been submitted successfully. Our team will review your request
+        and contact you shortly with the next steps for your Amazon growth plan.
+      </p>
+
+      <div class="actions">
+        <a
+          class="btn btn-primary"
+          href="https://wa.me/916387104378?text=Hello,%20I%20just%20submitted%20the%20form%20and%20want%20to%20discuss%20my%20Amazon%20growth%20plan."
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Chat on WhatsApp
+        </a>
+        <a class="btn btn-secondary" href="./">Back to Landing Page</a>
+      </div>
+
+      <div class="contact-box">
+        <strong>DIRECT CONTACT</strong>
+        <span>+91 63871 04378</span>
+        <span>Gautamsoni4422@gmail.com</span>
+      </div>
+    </main>
+  </body>
+</html>

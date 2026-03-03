@@ -1,4 +1,4 @@
-import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin, ArrowUp } from 'lucide-react';
+import { Facebook, Twitter, Linkedin, Instagram, Youtube, Mail, Phone, MapPin, ArrowUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { SITE_CONFIG, getMailtoHref, getTelHref } from '../config/site';
 
@@ -35,6 +35,7 @@ const Footer = () => {
     Twitter,
     LinkedIn: Linkedin,
     Instagram,
+    YouTube: Youtube,
   };
 
   return (
@@ -106,16 +107,6 @@ const Footer = () => {
                   <span className="text-gray-400 text-lg">{service}</span>
                 </li>
               ))}
-              <li>
-                <a
-                  href={SITE_CONFIG.spnLinks.accountManagement}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary-400 hover:text-primary-300 transition-colors text-lg font-semibold"
-                >
-                  Explore Our SPN Page
-                </a>
-              </li>
             </ul>
           </div>
 

@@ -6,39 +6,39 @@ const Services = () => {
   const services = [
     {
       number: '01',
-      icon: <Target className="w-10 h-10" />,
-      title: 'Amazon PPC',
-      description: 'Get an expert review of your Amazon Pay-Per-Click campaigns to uncover wasted spend, enhance targeting, and unlock higher revenue through actionable optimizations.',
-      features: ['Campaign audit & optimization', 'Bid management & targeting', 'ROI-focused strategies'],
+      icon: <Building2 className="w-10 h-10" />,
+      title: 'Account Management',
+      description: 'Get end-to-end Amazon account management support focused on operational stability, issue resolution, and structured account growth for your brand.',
+      features: ['Account health management', 'Case handling & support', 'Growth-focused account oversight'],
       color: 'from-primary-400 to-amber-500',
-      spnUrl: SITE_CONFIG.spnLinks.advertising,
+      spnUrl: SITE_CONFIG.spnLinks.accountManagement,
     },
     {
       number: '02',
-      icon: <BarChart3 className="w-10 h-10" />,
-      title: 'Amazon Performance',
-      description: 'Receive a detailed analysis of your Amazon performance marketing, focusing on strategy, campaign structure, and data-driven improvements to boost growth and visibility.',
-      features: ['Performance analysis', 'Campaign structure optimization', 'Data-driven insights'],
+      icon: <Target className="w-10 h-10" />,
+      title: 'Advertising',
+      description: 'Improve Amazon ad performance with structured campaign management, sharper targeting, and optimization designed to drive profitable growth.',
+      features: ['Campaign audit & optimization', 'Bid management & targeting', 'ROI-focused advertising strategies'],
       color: 'from-yellow-400 to-orange-500',
       spnUrl: SITE_CONFIG.spnLinks.advertising,
     },
     {
       number: '03',
-      icon: <FileText className="w-10 h-10" />,
-      title: 'Amazon A+ Content',
-      description: 'Access a comprehensive check of your Amazon Brand Story and Enhanced Brand Content, optimizing creative elements for better engagement and increased conversion rates.',
-      features: ['Brand Story optimization', 'Enhanced Brand Content', 'Creative element enhancement'],
+      icon: <Search className="w-10 h-10" />,
+      title: 'Cataloging',
+      description: 'Strengthen your product catalog with optimized listings, structured content, and cleaner product data that improves discoverability and conversion.',
+      features: ['Listing quality improvement', 'Catalog structure optimization', 'Keyword and content refinement'],
       color: 'from-amber-400 to-primary-600',
-      spnUrl: SITE_CONFIG.spnLinks.enhancedBrandContent,
+      spnUrl: SITE_CONFIG.spnLinks.cataloging,
     },
     {
       number: '04',
-      icon: <Search className="w-10 h-10" />,
-      title: 'Amazon SEO & Listing Optimization',
-      description: 'Benefit from a full audit of your product listings and keywords to maximize organic traffic, improve search rankings, and increase your Amazon marketplace sales.',
-      features: ['Product listing audit', 'Keyword optimization', 'Search ranking improvement'],
+      icon: <FileText className="w-10 h-10" />,
+      title: 'Enhance Brand Content',
+      description: 'Upgrade your brand presence with stronger A+ content, better storytelling, and richer creative assets built to improve buyer trust and conversion.',
+      features: ['A+ content optimization', 'Brand story enhancement', 'Creative content improvement'],
       color: 'from-orange-400 to-amber-600',
-      spnUrl: SITE_CONFIG.spnLinks.cataloging,
+      spnUrl: SITE_CONFIG.spnLinks.enhancedBrandContent,
     },
     {
       number: '05',
@@ -215,24 +215,6 @@ const Services = () => {
             </motion.div>
           ))}
         </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="mt-10 text-center"
-        >
-          <a
-            href={SITE_CONFIG.spnLinks.accountManagement}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-primary-600 font-bold hover:text-primary-700 transition-colors inline-flex items-center gap-2"
-          >
-            Explore Our SPN Page
-            <ArrowRight className="w-4 h-4" />
-          </a>
-        </motion.div>
 
         {/* CTA Section */}
         <motion.div

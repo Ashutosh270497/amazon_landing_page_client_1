@@ -305,7 +305,7 @@ const ROICalculator = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         input[type="range"]::-webkit-slider-thumb {
           -webkit-appearance: none;
           width: 24px;

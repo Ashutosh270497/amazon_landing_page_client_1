@@ -4,9 +4,9 @@ import { MessageCircle, Send, CheckCircle, Mail, Phone, MapPin } from 'lucide-re
 import { CONTAINER } from '../constants';
 import {
   SITE_CONFIG,
-  getLeadMailtoHref,
   getMailtoHref,
   getTelHref,
+  submitLeadForm,
   getWhatsAppUrl,
 } from '../config/site';
 
@@ -24,6 +24,8 @@ const revenueLabelMap = revenueOptions.reduce((acc, option) => {
   return acc;
 }, {});
 
+const THANK_YOU_PATH = `${import.meta.env.BASE_URL}thank-you.html`;
+
 // Input base styles
 const inputBaseStyles = 'w-full px-4 py-3 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all duration-200 bg-white/10 text-white placeholder-gray-500';
 const getInputStyles = (hasError) => `${inputBaseStyles} border ${hasError ? 'border-red-400' : 'border-white/20'}`;
@@ -38,8 +40,9 @@ const ContactForm = () => {
     message: '',
   });
 
-  const [showSuccess, setShowSuccess] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -93,39 +96,30 @@ const ContactForm = () => {
       return;
     }
 
-    const emailBody = [
-      'New Contact Form Submission',
-      `Submitted At: ${new Date().toLocaleString()}`,
-      '',
-      `Full Name: ${formData.name}`,
-      `Brand Name: ${formData.brandName}`,
-      `Monthly Revenue: ${revenueLabelMap[formData.monthlyRevenue] || formData.monthlyRevenue}`,
-      `Email: ${formData.email}`,
-      `Phone: ${formData.phone}`,
-      `Message: ${formData.message || 'N/A'}`,
-    ].join('\n');
+    setSubmitError('');
+    setIsSubmitting(true);
 
-    const mailtoHref = getLeadMailtoHref({
-      subject: 'New Lead - Contact Form',
-      body: emailBody,
-    });
-
-    window.location.href = mailtoHref;
-
-    setShowSuccess(true);
-
-    setFormData({
-      name: '',
-      brandName: '',
-      monthlyRevenue: '',
-      email: '',
-      phone: '',
-      message: '',
-    });
-
-    setTimeout(() => {
-      setShowSuccess(false);
-    }, 5000);
+    try {
+      submitLeadForm({
+        subject: 'New Lead - Contact Form',
+        formName: 'Contact Form',
+        replyTo: formData.email,
+        nextUrl: THANK_YOU_PATH,
+        fields: {
+          submittedAt: new Date().toLocaleString(),
+          fullName: formData.name,
+          brandName: formData.brandName,
+          monthlyRevenue: revenueLabelMap[formData.monthlyRevenue] || formData.monthlyRevenue,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message || 'N/A',
+        },
+      });
+    } catch (error) {
+      setSubmitError('Lead submission failed. Please try again or contact us on WhatsApp.');
+      setIsSubmitting(false);
+      console.error(error);
+    }
   };
 
   const openWhatsApp = () => {
@@ -184,17 +178,10 @@ const ContactForm = () => {
           >
             <h3 className="text-3xl font-extrabold text-white mb-8">Contact Us</h3>
 
-            {showSuccess && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="mb-6 bg-primary-500/20 border border-primary-500/30 rounded-xl p-4 flex items-center gap-3 text-primary-300"
-              >
-                <CheckCircle className="w-5 h-5 flex-shrink-0" />
-                <p className="text-sm font-medium">
-                  Thank you! We've received your message and will get back to you soon.
-                </p>
-              </motion.div>
+            {submitError && (
+              <div className="mb-6 bg-red-500/15 border border-red-400/30 rounded-xl p-4 text-sm font-medium text-red-200">
+                {submitError}
+              </div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -302,12 +289,13 @@ const ContactForm = () => {
 
               <motion.button
                 type="submit"
+                disabled={isSubmitting}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white px-6 py-4 rounded-full font-bold text-lg transition-all duration-300 shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 flex items-center justify-center gap-2"
+                className="w-full bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 disabled:opacity-70 disabled:cursor-not-allowed text-white px-6 py-4 rounded-full font-bold text-lg transition-all duration-300 shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 flex items-center justify-center gap-2"
               >
                 <Send size={20} />
-                Submit Now
+                {isSubmitting ? 'Submitting...' : 'Submit Now'}
               </motion.button>
             </form>
           </motion.div>

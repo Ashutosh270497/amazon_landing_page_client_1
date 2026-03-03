@@ -3,6 +3,7 @@ export const SITE_CONFIG = {
   contact: {
     email: 'support@digitaluniversepro.co',
     leadInboxEmail: 'Gautamsoni4422@gmail.com',
+    leadFormEndpoint: 'https://formsubmit.co/Gautamsoni4422@gmail.com',
     phoneDisplay: '+91 63871 04378',
     phoneE164: '+916387104378',
     secondaryPhoneDisplay: '+91 92080 24236',
@@ -15,6 +16,7 @@ export const SITE_CONFIG = {
     { name: 'Facebook', url: 'https://www.facebook.com/profile.php?id=100095308834069' },
     { name: 'LinkedIn', url: 'https://www.linkedin.com/feed/' },
     { name: 'Instagram', url: 'https://www.instagram.com/digitaluniversepro.co/' },
+    { name: 'YouTube', url: 'https://www.youtube.com/@Prodigitaluniverse' },
   ],
   spnLinks: {
     accountManagement:
@@ -42,3 +44,50 @@ export const getTelHref = (phoneE164 = SITE_CONFIG.contact.phoneE164) => `tel:${
 
 export const getLeadMailtoHref = ({ subject, body, to = SITE_CONFIG.contact.leadInboxEmail }) =>
   `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+export const submitLeadForm = ({
+  subject,
+  formName,
+  replyTo,
+  fields,
+  nextUrl,
+}) => {
+  if (typeof document === 'undefined') {
+    throw new Error('Form submission is only available in the browser');
+  }
+
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = SITE_CONFIG.contact.leadFormEndpoint;
+  form.style.display = 'none';
+
+  const resolvedNextUrl = nextUrl
+    ? new URL(nextUrl, window.location.origin).toString()
+    : window.location.href;
+
+  const payload = {
+    _subject: subject,
+    _template: 'table',
+    _captcha: 'false',
+    _next: resolvedNextUrl,
+    _replyto: replyTo || SITE_CONFIG.contact.email,
+    form_name: formName,
+    ...fields,
+  };
+
+  Object.entries(payload).forEach(([key, value]) => {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = key;
+    input.value = value ?? '';
+    form.appendChild(input);
+  });
+
+  document.body.appendChild(form);
+
+  try {
+    form.submit();
+  } finally {
+    form.remove();
+  }
+};
